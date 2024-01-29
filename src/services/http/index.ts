@@ -1,6 +1,4 @@
 import express from "express"
-import { createReadStream } from "fs"
-import { join } from "path"
 import mongoose from "mongoose"
 const app = express()
 
@@ -12,7 +10,7 @@ const PORT = process.env?.PORT ?? 3000
 const initServer = (botInstance: any) => {
 
     const MONGO_DB_URI =
-        "mongodb+srv://Tisineitor:mk8QrbQJ5HE85mzE@reservasbot.qrmnl8y.mongodb.net/?retryWrites=true&w=majority" ||
+        process.env.MONGO_DB_URI ||
         "";
 
     const option = {
@@ -29,11 +27,6 @@ const initServer = (botInstance: any) => {
             console.error(err);
         });
 
-    /*     app.get('/callback', (req, res) => {
-            
-            res.send(`Todo Ok`)
-        })
-     */
     app.listen(PORT, () => {
         console.log(`http://locahost:${PORT} ready!`)
     })

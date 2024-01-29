@@ -1,9 +1,9 @@
 import MongoAdapter from '@bot-whatsapp/database/mongo';
 
 const MONGO_DB_URI =
-    "mongodb+srv://Tisineitor:mk8QrbQJ5HE85mzE@reservasbot.qrmnl8y.mongodb.net/?retryWrites=true&w=majority" ||
+    process.env.MONGO_DB_URI ||
     "";
-const MONGO_DB_NAME = "reservasbot";
+const MONGO_DB_NAME = "dont-forget-love";
 
 
 export default new MongoAdapter({

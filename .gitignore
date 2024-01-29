@@ -1,0 +1,6 @@
+.env
+*.log
+*_sessions/
+dist/
+*.png.
+node_modules
