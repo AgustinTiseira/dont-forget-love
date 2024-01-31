@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { generatePromptDailyTips } from "./prompt";
-import { DailyTips } from "src/@types/dailyTips";
+import { IHistoryDailyTips } from "src/@types/dailyTips";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -8,7 +8,7 @@ const openai = new OpenAI({
 
 
 
-export const runDailyTips = async (previousTips: DailyTips[], userName: string, coupleName: string, CouplesGoal: string): Promise<string> => {
+export const runDailyTips = async (previousTips: IHistoryDailyTips[], userName: string, coupleName: string, CouplesGoal: string): Promise<string> => {
     try {
         const promtp = generatePromptDailyTips(previousTips, userName, coupleName, CouplesGoal)
         const response = await openai.chat.completions.create({

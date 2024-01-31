@@ -1,17 +1,6 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
 import { getCoupleNameFlow } from './couple';
-
-
-const responseGetName = (name: string) => {
-    return `Un gusto ${name}! \n
-En "don't forget love" sabemos lo dificil que puede llegar a ser mantener el fuego del amor a lo largo del tiempo 😅 o ser detallista con la persona que te gusta 😍
-Vamos a aprender todo lo que le gusta a tu pareja y armaremos un plan de acción para que puedas sorprenderla a diario\n
--Te recordaremos fechas importantes.
--Te daremos ideas de regalos.
--Te ayudaremos a planear citas diferentes.
--Y mucho más!
-    `
-}
+import { updateUserFunction } from 'src/services/functions/users';
 
 //Obtengo el nombre del usuario
 
@@ -19,8 +8,10 @@ export const getNameFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["Para empezar, ¿Cual es tu nombre? (No compartiremos tu información con nadie)"],
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
-                await flowDynamic([{ body: responseGetName(ctx.body) }, { body: "Pregunta: 1/3 ✅" }])
+                await flowDynamic([
+                    { body: `Un gusto ${ctx.body}!` }, { body: "Pregunta: 1/3 ✅" }])
                 await state.update({ name: ctx.body })
+                await updateUserFunction(ctx.from, { name: ctx.body })
                 await gotoFlow(getAgeFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
@@ -36,6 +27,7 @@ export const getAgeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
             try {
                 await flowDynamic([{ body: "Pregunta: 2/3 ✅✅" }])
                 await state.update({ birthDate: ctx.body })
+                await updateUserFunction(ctx.from, { birthDate: ctx.body })
                 await gotoFlow(getGenderFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
@@ -51,8 +43,7 @@ export const getGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
             try {
                 await flowDynamic([{ body: "Pregunta: 3/3 ✅✅✅" }, { body: "Solo una cosita mas, necesitamos una breve descripción tuya" }])
                 await state.update({ gender: ctx.body })
-                // logica de crear user
-                //--------
+                await updateUserFunction(ctx.from, { gender: ctx.body })
                 await gotoFlow(descriptionFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
@@ -71,8 +62,7 @@ export const descriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
             try {
                 await state.update({ description: ctx.body })
                 await flowDynamic([{ body: "¡Listo! Ya estas registrado en Don't forget love" }, { body: "Ahora vamos a conocer mejor a tu pareja" }])
-                // logica de crear user
-                //--------
+                await updateUserFunction(ctx.from, { description: ctx.body })
                 await gotoFlow(getCoupleNameFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
