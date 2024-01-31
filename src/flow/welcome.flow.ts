@@ -1,17 +1,19 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
 import { getNameFlow } from './register';
 import { mainMenuFlow } from './mainMenu';
+import { createUserFunction } from 'src/services/functions/users';
 
-const user: boolean = true
+const user: boolean = false
 
 
 export const welcomeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
-    .addAction(async (ctx, { state, gotoFlow, flowDynamic }) => {
+    .addAction(async (ctx, { gotoFlow, flowDynamic }) => {
         try {
             if (user) {
                 await gotoFlow(mainMenuFlow)
             }
             else {
+                await createUserFunction(ctx.from)
                 await flowDynamic([{ body: `Hola! bienvenido a la plataforma de "don't forget love".` },
                 { body: `Voy a ayudarte a mejorar tu relación con tu pareja o a llevarla al siguiente nivel` },
                 { body: `Para esto vamos a crear una inteligencia artificial especializado en tu pareja y en vos, que pueda:` },

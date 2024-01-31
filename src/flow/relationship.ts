@@ -1,4 +1,5 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
+import { mainMenuFlow } from './mainMenu';
 
 //obtengo como se conocieron
 
@@ -11,8 +12,9 @@ export const howTheyMetFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
                 const relationship = { howTheyMet: ctx.body }
-                state.update(relationship)
+                await state.update(relationship)
                 await flowDynamic([{ body: "ℹ️ Usaremos estos recuerdos para poder darte sugerencias 100% personalizadas" }, { body: "Ultimas 2 preguntas" }])
+                await gotoFlow(typeOfRelationship)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -28,8 +30,9 @@ export const typeOfRelationship = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTI
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
                 const relationship = { typeOfRelationship: ctx.body }
-                state.update(relationship)
+                await state.update(relationship)
                 await flowDynamic([{ body: "ℹ️ Adaptaremos nuestros consejos segun el punto de la relacion en la que se encuentren" }, { body: "Ultima pregunta 👏" }])
+                await gotoFlow(CouplesGoal)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -47,9 +50,10 @@ export const CouplesGoal = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     ],
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
-                const relationship = { typeOfRelationship: ctx.body }
-                state.update(relationship)
+                const relationship = { goal: ctx.body }
+                await state.update(relationship)
                 await flowDynamic([{ body: "Danos unos segundos para analizar su situacion actual, sus personalizadades y el objetivo que buscas." }])
+                await gotoFlow(mainMenuFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return

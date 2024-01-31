@@ -1,5 +1,7 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
+import { ICouple } from 'src/@types/couple';
 import { changeBirthDateToAge } from 'src/utils/date';
+import { howTheyMetFlow } from './relationship';
 
 //obtengo el nombre de la pareja
 
@@ -11,7 +13,7 @@ export const getCoupleNameFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTIO
                     body: `Sera un gusto ayudarte en tu relacion con ${ctx.body}!
     Usaremos su nombre para crear un perfil completo sobre tu pareja.` }, { body: "Pregunta: 1/5 ✅" }])
                 const couple = { name: ctx.body }
-                state.update({ couple })
+                await await state.update({ couple })
                 await gotoFlow(getCoupleAgeFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
@@ -25,11 +27,11 @@ export const getCoupleAgeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION
     { capture: true }, async (ctx, { state, gotoFlow, flowDynamic }) => {
         try {
             const coupleAge = changeBirthDateToAge(ctx.body)
-            const userAge = changeBirthDateToAge(state.get('birthDate'))
-            const couple = state.get('couple')
+            const userAge = changeBirthDateToAge(state.getMyState()?.birthDate)
+            const couple = state.getMyState()?.couple as ICouple
             await flowDynamic([{ body: `Genial, entonces ${couple.name} tiene ${coupleAge} años y tu ${userAge} años` }, { body: "Pregunta: 2/5 ✅✅" }])
             couple.birthDate = ctx.body
-            state.update({ couple })
+            await state.update({ couple })
             await gotoFlow(getCoupleGenderFlow)
         }
         catch (err) {
@@ -44,9 +46,9 @@ export const getCoupleGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACT
     .addAnswer(["¿Cual es el genero de tu pareja?"],
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             await flowDynamic([{ body: `Perfecto, ya tenemos la información basica sobre tu pareja` }, { body: "Pregunta: 3/5 ✅✅✅" }])
-            const couple = state.get('couple')
+            const couple = state.getMyState()?.couple as ICouple
             couple.gender = ctx.body
-            state.update({ couple })
+            await state.update({ couple })
             await gotoFlow(getCoupleDescriptionFlow)
         })
 
@@ -61,22 +63,25 @@ export const getCoupleDescriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENT
         "- Algo que odie",
         "que la motiva?",
         "usa un solo mensaje"],
-        { capture: true }, async (ctx, { state, flowDynamic }) => {
+        { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             await flowDynamic([{ body: `Excelente, solo una pregunta mas...` }, { body: "Pregunta: 4/5 ✅✅✅✅" }])
-            const couple = state.get('couple')
+            const couple = state.getMyState()?.couple as ICouple
             couple.description = ctx.body
-            state.update({ couple })
+            await state.update({ couple })
+            await gotoFlow(reasonForFallingInLoveFlow)
         })
 
 // Obtengo la razon por la que su pareja se enamoro del usuario
 
 export const reasonForFallingInLoveFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["¿Que hizo que tu pareja se enamore de vos?"],
-        { capture: true }, async (ctx, { state, flowDynamic }) => {
+        { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
+            console.log(ctx.body)
             await flowDynamic([{ body: `Gracias por la información` },
             { body: "ℹ️ Esta información nos permite crear un informe completo sobre sus personalidades" },
             { body: "Pregunta: 5/5 ✅✅✅✅✅" }])
-            const couple = state.get('couple')
+            const couple = state.getMyState()?.couple as ICouple
             couple.reasonForFallingInLove = ctx.body
-            state.update({ couple })
+            await state.update({ couple })
+            await gotoFlow(howTheyMetFlow)
         })

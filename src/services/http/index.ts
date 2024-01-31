@@ -1,5 +1,6 @@
 import express from "express"
 import mongoose from "mongoose"
+import userRoutes from "../routes/users"
 const app = express()
 
 const PORT = process.env?.PORT ?? 3000
@@ -7,6 +8,7 @@ const PORT = process.env?.PORT ?? 3000
 /**
  * inicia tu servicio HTTP (web)
  */
+
 const initServer = (botInstance: any) => {
 
     const MONGO_DB_URI =
@@ -30,6 +32,9 @@ const initServer = (botInstance: any) => {
     app.listen(PORT, () => {
         console.log(`http://locahost:${PORT} ready!`)
     })
+
+    //routes
+    app.use(userRoutes)
 }
 
 export { initServer }

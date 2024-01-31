@@ -20,7 +20,7 @@ export const getNameFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
                 await flowDynamic([{ body: responseGetName(ctx.body) }, { body: "Pregunta: 1/3 ✅" }])
-                state.update({ name: ctx.body })
+                await state.update({ name: ctx.body })
                 await gotoFlow(getAgeFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
@@ -35,7 +35,7 @@ export const getAgeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         { capture: true }, async (ctx, { state, gotoFlow, flowDynamic }) => {
             try {
                 await flowDynamic([{ body: "Pregunta: 2/3 ✅✅" }])
-                state.update({ birthDate: ctx.body })
+                await state.update({ birthDate: ctx.body })
                 await gotoFlow(getGenderFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
@@ -50,7 +50,7 @@ export const getGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         { capture: true }, async (ctx, { state, gotoFlow, flowDynamic }) => {
             try {
                 await flowDynamic([{ body: "Pregunta: 3/3 ✅✅✅" }, { body: "Solo una cosita mas, necesitamos una breve descripción tuya" }])
-                state.update({ gender: ctx.body })
+                await state.update({ gender: ctx.body })
                 // logica de crear user
                 //--------
                 await gotoFlow(descriptionFlow)
@@ -69,7 +69,7 @@ export const descriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         "No olvides mencionar: \n -A que te dedicas \n -Que te gusta hacer en tu tiempo libre \n etc.."],
         { capture: true }, async (ctx, { state, gotoFlow, flowDynamic }) => {
             try {
-                state.update({ description: ctx.body })
+                await state.update({ description: ctx.body })
                 await flowDynamic([{ body: "¡Listo! Ya estas registrado en Don't forget love" }, { body: "Ahora vamos a conocer mejor a tu pareja" }])
                 // logica de crear user
                 //--------
