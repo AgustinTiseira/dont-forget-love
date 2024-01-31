@@ -1,4 +1,5 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
+import { getCoupleNameFlow } from './couple';
 
 
 const responseGetName = (name: string) => {
@@ -11,6 +12,8 @@ Vamos a aprender todo lo que le gusta a tu pareja y armaremos un plan de acción
 -Y mucho más!
     `
 }
+
+//Obtengo el nombre del usuario
 
 export const getNameFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["Para empezar, ¿Cual es tu nombre? (No compartiremos tu información con nadie)"],
@@ -25,18 +28,22 @@ export const getNameFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
             }
         })
 
+// Obtengo la edad del usuario
+
 export const getAgeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
-    .addAnswer(["¿Cual es tu edad?", "estas preguntas nos ayudan a hacer un plan personalizado para vos."],
+    .addAnswer(["¿Cual es tu fecha de nacimiento?", "usa el formato dd/mm/aaaa", "Por Ejemplo: 25/01/1990", "estas preguntas nos ayudan a hacer un plan personalizado para vos."],
         { capture: true }, async (ctx, { state, gotoFlow, flowDynamic }) => {
             try {
                 await flowDynamic([{ body: "Pregunta: 2/3 ✅✅" }])
-                state.update({ age: ctx.body })
+                state.update({ birthDate: ctx.body })
                 await gotoFlow(getGenderFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
             }
         })
+
+// Obtengo el genero del usuario
 
 export const getGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["¿Cual es tu genero?"],
@@ -53,6 +60,8 @@ export const getGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
             }
         })
 
+// Obtengo la descripcion del usuario y creo el usuario. sigue el flujo a las preguntas sobre la pareja
+
 export const descriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["Describete de la forma que mas te sientas comodo",
         "Usa tantos adjetivos como quieras PERO EN UN SOLO MENSAJE",
@@ -61,8 +70,10 @@ export const descriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         { capture: true }, async (ctx, { state, gotoFlow, flowDynamic }) => {
             try {
                 state.update({ description: ctx.body })
+                await flowDynamic([{ body: "¡Listo! Ya estas registrado en Don't forget love" }, { body: "Ahora vamos a conocer mejor a tu pareja" }])
                 // logica de crear user
                 //--------
+                await gotoFlow(getCoupleNameFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return

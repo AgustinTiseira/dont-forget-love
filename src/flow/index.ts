@@ -1,15 +1,23 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
 import { welcomeFlow } from './welcome.flow';
 import { descriptionFlow, getAgeFlow, getGenderFlow, getNameFlow } from './register';
-/**
- * Debes de implementasr todos los flujos
- */
+import { getCoupleAgeFlow, getCoupleDescriptionFlow, getCoupleGenderFlow, getCoupleNameFlow } from './couple';
+import { CouplesGoal, howTheyMetFlow, typeOfRelationship } from './relationship';
+
+
 export default BotWhatsapp.createFlow(
     [
         welcomeFlow,
         getNameFlow,
         descriptionFlow,
         getGenderFlow,
-        getAgeFlow
+        getAgeFlow,
+        getCoupleNameFlow,
+        getCoupleAgeFlow,
+        getCoupleGenderFlow,
+        getCoupleDescriptionFlow,
+        CouplesGoal,
+        typeOfRelationship,
+        howTheyMetFlow
     ]
 )
