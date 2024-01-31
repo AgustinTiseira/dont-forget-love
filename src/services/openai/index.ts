@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import { ChatCompletionMessageParam } from "openai/resources";
-import { generatePrompt } from "./prompt";
+import { generatePromptDailyTips } from "./prompt";
+import { DailyTips } from "src/@types/dailyTips";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -8,10 +8,9 @@ const openai = new OpenAI({
 
 
 
-
-export const run = async (history: ChatCompletionMessageParam[]): Promise<string> => {
+export const runDailyTips = async (previousTips: DailyTips[], userName: string, coupleName: string, CouplesGoal: string): Promise<string> => {
     try {
-        const promtp = generatePrompt()
+        const promtp = generatePromptDailyTips(previousTips, userName, coupleName, CouplesGoal)
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [
@@ -19,7 +18,6 @@ export const run = async (history: ChatCompletionMessageParam[]): Promise<string
                     "role": "system",
                     "content": promtp
                 },
-                ...history
             ],
             temperature: 1,
             max_tokens: 800,
