@@ -27,26 +27,25 @@ export enum RelationshipProperty {
 }
 
 export const detectMissingInformation = (user: IUser) => {
-    let missingProperty: UserProperty | CoupleProperty | RelationshipProperty | undefined;
     for (const property in UserProperty) {
         const propertyName = UserProperty[property];
         if (!user[propertyName]) {
-            missingProperty = propertyName;
+            return propertyName;
+
         }
     }
     for (const property in CoupleProperty) {
         const propertyName = CoupleProperty[property];
         if (!user.couple[propertyName]) {
-            missingProperty = propertyName;
+            return propertyName;
         }
     }
     for (const property in RelationshipProperty) {
         const propertyName = RelationshipProperty[property];
         if (!user.relationship[propertyName]) {
-            missingProperty = propertyName;
+            return propertyName;
         }
     }
-    return missingProperty
 }
 
 export const redirectToMissingInformationFlow = (user: IUser) => {

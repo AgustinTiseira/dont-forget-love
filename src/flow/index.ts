@@ -7,6 +7,8 @@ import { dailyTipsFlow } from './dailyTips/start';
 import { mainMenuFlow } from './mainMenu';
 import { likeOrDislikeFlow } from './dailyTips/likeOrDisLike';
 import { settingsDailyTipsFlow } from './dailyTips/setting';
+import { conversationModeStartFlow, initConversationModeAIFlow } from './conversationMode/start';
+import { bypassFlow } from './conversationMode/bypass';
 
 
 export default BotWhatsapp.createFlow(
@@ -27,6 +29,9 @@ export default BotWhatsapp.createFlow(
         howTheyMetFlow,
         dailyTipsFlow,
         likeOrDislikeFlow,
-        settingsDailyTipsFlow
+        settingsDailyTipsFlow,
+        conversationModeStartFlow,
+        initConversationModeAIFlow,
+        bypassFlow
     ]
 )

@@ -2,10 +2,8 @@ import BotWhatsapp from '@bot-whatsapp/bot';
 import { runDailyTips } from 'src/services/openai';
 import { likeOrDislikeFlow } from './likeOrDisLike';
 import { settingsDailyTipsFlow } from './setting';
-import { IDailyTips } from 'src/@types/dailyTips';
-import { ICouple } from 'src/@types/couple';
-import { IRelationship } from 'src/@types/relationship';
 import { getUserByPhoneFunction, updateUserFunction } from 'src/services/functions/users';
+import { mainMenuFlow } from '../mainMenu';
 
 
 export const dailyTipsFlow = BotWhatsapp.addKeyword("TIPS DIARIOS")
@@ -21,6 +19,8 @@ export const dailyTipsFlow = BotWhatsapp.addKeyword("TIPS DIARIOS")
                 }
                 if (ctx.body === "2" || ctx.body.toUpperCase() === "CONFIGURACIÓN") {
                     await gotoFlow(settingsDailyTipsFlow)
+                } if (ctx.body === "3" || ctx.body.toUpperCase() === "SALIR") {
+                    await gotoFlow(mainMenuFlow)
                 }
 
             } catch (err) {

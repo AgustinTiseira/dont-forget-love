@@ -40,12 +40,12 @@ export const typeOfRelationshipFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.
         })
 
 export const CouplesGoalFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
-    .addAnswer(["¿Cual es tu objetivo?",
+    .addAnswer(["¿Cual es tu objetivo?  describilo libremente cuanto mas nos expliques mejor vamos a poder ayudarte a lograrlo 🎯",
+        "Trata de usar terminos como:",
         "Pasar al siguiente nivel 🔝",
         "Salir de la rutina 💫",
         "Mejorar la comunicación 🗣️",
         "Conocerse mejor 🤝",
-        "Terminar la relación 🙅‍♀️",
         "Llevarse mejor"
     ],
         { capture: true }, async (ctx, { flowDynamic, gotoFlow }) => {
