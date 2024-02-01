@@ -1,6 +1,8 @@
 import express from "express"
 import mongoose from "mongoose"
 import userRoutes from "../routes/users"
+import { join } from "path"
+import { createReadStream } from "fs"
 const app = express()
 
 const PORT = process.env?.PORT ?? 3000
@@ -29,8 +31,16 @@ const initServer = (botInstance: any) => {
             console.error(err);
         });
 
+
     app.listen(PORT, () => {
         console.log(`http://locahost:${PORT} ready!`)
+    })
+
+    app.get("/qr", async (_, res) => {
+        const PATH_QR = join(process.cwd(), "bot.qr.png")
+        const fileSteam = createReadStream(PATH_QR)
+        res.writeHead(200, { "Content-Type": "image/png" })
+        fileSteam.pipe(res)
     })
 
     //routes
