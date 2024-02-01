@@ -47,6 +47,7 @@ declare module "@bot-whatsapp/bot" {
     state: BotState;
     extensions: any;
     provider: any;
+    idle: (time: number) => Promise<void>;
   };
 
   // Función de devolución de llamada del bot

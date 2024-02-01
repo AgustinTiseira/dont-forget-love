@@ -5,5 +5,5 @@ export interface IHistoryDailyTips {
 
 export interface IDailyTips {
     previuosTips: IHistoryDailyTips[]
-    setting: string
+    setting?: string
 }

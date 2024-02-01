@@ -5,6 +5,7 @@ import { settingsDailyTipsFlow } from './setting';
 import { IDailyTips } from 'src/@types/dailyTips';
 import { ICouple } from 'src/@types/couple';
 import { IRelationship } from 'src/@types/relationship';
+import { getUserByPhoneFunction, updateUserFunction } from 'src/services/functions/users';
 
 
 export const dailyTipsFlow = BotWhatsapp.addKeyword("TIPS DIARIOS")
@@ -12,14 +13,10 @@ export const dailyTipsFlow = BotWhatsapp.addKeyword("TIPS DIARIOS")
         { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
                 if (ctx.body === "1" || ctx.body.toUpperCase() === "TIP DE HOY") {
-                    const dailyTips = (state.getMyState()?.dailyTips ?? []) as IDailyTips
-                    const userName = (state.getMyState()?.name ?? "") as string
-                    const couple = (state.getMyState()?.couple) as ICouple
-                    const relationship = state.getMyState()?.relationship as IRelationship
-                    const newDailyTip = await runDailyTips(dailyTips.previuosTips, userName, couple.name, relationship.goal)
+                    const user = await getUserByPhoneFunction(ctx.from)
+                    const newDailyTip = await runDailyTips(user.dailyTips.previuosTips, user.name, user.couple.name, user.relationship.goal)
                     await flowDynamic([{ body: newDailyTip }])
-                    dailyTips.previuosTips.push({ tip: newDailyTip })
-                    await state.update(dailyTips)
+                    await updateUserFunction(ctx.from, { dailyTips: { previuosTips: [...user.dailyTips.previuosTips, { tip: newDailyTip }] } })
                     await gotoFlow(likeOrDislikeFlow)
                 }
                 if (ctx.body === "2" || ctx.body.toUpperCase() === "CONFIGURACIÓN") {

@@ -2,7 +2,7 @@ import BotWhatsapp from '@bot-whatsapp/bot';
 import { welcomeFlow } from './welcome.flow';
 import { descriptionFlow, getAgeFlow, getGenderFlow, getNameFlow } from './register';
 import { getCoupleAgeFlow, getCoupleDescriptionFlow, getCoupleGenderFlow, getCoupleNameFlow, reasonForFallingInLoveFlow } from './couple';
-import { CouplesGoal, howTheyMetFlow, typeOfRelationship } from './relationship';
+import { CouplesGoalFlow, howTheyMetFlow, typeOfRelationshipFlow } from './relationship';
 import { dailyTipsFlow } from './dailyTips/start';
 import { mainMenuFlow } from './mainMenu';
 import { likeOrDislikeFlow } from './dailyTips/likeOrDisLike';
@@ -22,8 +22,8 @@ export default BotWhatsapp.createFlow(
         getCoupleDescriptionFlow,
         reasonForFallingInLoveFlow,
         mainMenuFlow,
-        CouplesGoal,
-        typeOfRelationship,
+        CouplesGoalFlow,
+        typeOfRelationshipFlow,
         howTheyMetFlow,
         dailyTipsFlow,
         likeOrDislikeFlow,

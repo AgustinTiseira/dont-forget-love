@@ -1,7 +1,7 @@
 export interface ICouple {
-    name: string
-    birthDate: string
-    gender: string
-    description: string
-    reasonForFallingInLove: string
+    coupleName?: string
+    coupleBirthDate?: string
+    coupleGender?: string
+    coupleDescription?: string
+    reasonForFallingInLove?: string
 }

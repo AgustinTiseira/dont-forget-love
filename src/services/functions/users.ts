@@ -2,7 +2,7 @@ import User, { IUser } from "../models/users";
 
 export const createUserFunction = async (phone: string): Promise<IUser> => {
     try {
-        const user = new User({ phone });
+        const user = new User({ phone, onboardingComplete: false, dailyTips: { previuosTips: [], setting: "" } });
         await user.save()
         return user;
     } catch (error) {

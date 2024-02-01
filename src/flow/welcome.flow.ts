@@ -1,30 +1,31 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
 import { getNameFlow } from './register';
 import { mainMenuFlow } from './mainMenu';
-import { createUserFunction } from 'src/services/functions/users';
-
-const user: boolean = false
-
+import { createUserFunction, getUserByPhoneFunction } from 'src/services/functions/users';
+import { redirectToMissingInformationFlow } from 'src/utils/flows';
 
 export const welcomeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
     .addAction(async (ctx, { gotoFlow, flowDynamic }) => {
         try {
-            if (user) {
-                await gotoFlow(mainMenuFlow)
+            let user = await getUserByPhoneFunction(ctx.from)
+            if (!user) {
+                user = await createUserFunction(ctx.from)
             }
-            else {
-                await createUserFunction(ctx.from)
-                await flowDynamic([{ body: `Hola! bienvenido a la plataforma de "don't forget love".` },
-                { body: `Voy a ayudarte a mejorar tu relación con tu pareja o a llevarla al siguiente nivel` },
-                { body: `Para esto vamos a crear una inteligencia artificial especializado en tu pareja y en vos, que pueda:` },
+            if (!user.onboardingComplete) {
+                await flowDynamic([{ body: `Hola! bienvenido al asistente de "don't forget love". Voy a ayudarte a mejorar tu relación con tu pareja o a llevarla al siguiente nivel` },
+                { body: `Para esto vamos a utilizar inteligencia artificial para que disfrutes de un asesor especializado en tu relación y te ayude a:` },
                 { body: `📝 Recordarte fechas importantes` },
                 { body: `🎨 Darte tips romanticos que le van a encantar a tu pareja` },
                 { body: `🎡 Ayudarte a planear citas diferentes, 100% personalizadas` },
                 { body: `🗣️ Charlar con vos sobre tu relación` },
                 { body: `😈 Salir de la monotonía` }
                 ])
-                await gotoFlow(getNameFlow)
+                const flow = redirectToMissingInformationFlow(user)
+                if (flow) {
+                    return await gotoFlow(redirectToMissingInformationFlow(user))
+                }
             }
+            return await gotoFlow(mainMenuFlow)
         } catch (err) {
             console.log(`[ERROR]:`, err)
             return
