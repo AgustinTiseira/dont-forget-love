@@ -8,9 +8,10 @@ const openai = new OpenAI({
 
 
 
-export const runDailyTips = async (previousTips: IHistoryDailyTips[], userName: string, coupleName: string, CouplesGoal: string): Promise<string> => {
+export const runDailyTips = async (previousTips: IHistoryDailyTips[], userName: string, coupleName: string, CouplesGoal: string, howTheyMet: string, reasonForFallingInLove: string, typeOfRelationship: string, setting: string): Promise<string> => {
     try {
-        const promtp = generatePromptDailyTips(previousTips, userName, coupleName, CouplesGoal)
+        const promtp = generatePromptDailyTips(previousTips, userName, coupleName, CouplesGoal, howTheyMet, reasonForFallingInLove, typeOfRelationship, setting)
+        console.log(promtp)
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [

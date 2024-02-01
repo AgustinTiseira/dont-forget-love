@@ -14,7 +14,7 @@ export const dailyTipsFlow = BotWhatsapp.addKeyword("TIPS DIARIOS")
             try {
                 if (ctx.body === "1" || ctx.body.toUpperCase() === "TIP DE HOY") {
                     const user = await getUserByPhoneFunction(ctx.from)
-                    const newDailyTip = await runDailyTips(user.dailyTips.previuosTips, user.name, user.couple.name, user.relationship.goal)
+                    const newDailyTip = await runDailyTips(user.dailyTips.previuosTips, user.name, user.couple.coupleName, user.relationship.goal, user.relationship.howTheyMet, user.couple.reasonForFallingInLove, user.relationship.typeOfRelationship, user.dailyTips.setting)
                     await flowDynamic([{ body: newDailyTip }])
                     await updateUserFunction(ctx.from, { dailyTips: { previuosTips: [...user.dailyTips.previuosTips, { tip: newDailyTip }] } })
                     await gotoFlow(likeOrDislikeFlow)

@@ -21,9 +21,12 @@ export const getUserByPhoneFunction = async (phone: string): Promise<IUser> => {
 
 export const updateUserFunction = async (phone: string, data: Partial<IUser>): Promise<IUser> => {
     try {
+        console.log(phone)
         const user = await User.findOneAndUpdate({ phone }, data, { new: true });
-        await user.save()
-        return user
+        if (user) {
+            await user.save()
+            return user
+        }
     } catch (error) {
         console.error("[UPDATE_USER_FUNCTION]", error);
     }
