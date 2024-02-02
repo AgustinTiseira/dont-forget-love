@@ -1,11 +1,10 @@
 import BotWhatsapp from '@bot-whatsapp/bot';
-import { getNameFlow } from './register';
 import { mainMenuFlow } from './mainMenu';
 import { createUserFunction, getUserByPhoneFunction, updateUserFunction } from 'src/services/functions/users';
 import { redirectToMissingInformationFlow } from 'src/utils/flows';
 
 export const welcomeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
-    .addAction(async (ctx, { gotoFlow, flowDynamic }) => {
+    .addAction(async (ctx, { state, gotoFlow, flowDynamic }) => {
         try {
             let user = await getUserByPhoneFunction(ctx.from)
             if (!user) {
@@ -26,7 +25,11 @@ export const welcomeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
                 }
                 await updateUserFunction(ctx.from, { onboardingComplete: true })
             }
-            return await gotoFlow(mainMenuFlow)
+            const currentFlow = await state.getMyState()?.currentFlow
+            console.log('currentFlow', currentFlow)
+            if (!currentFlow) {
+                return await gotoFlow(mainMenuFlow)
+            }
         } catch (err) {
             console.log(`[ERROR]:`, err)
             return

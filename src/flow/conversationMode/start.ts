@@ -4,7 +4,7 @@ import { getUserByPhoneFunction } from 'src/services/functions/users';
 import { runConversationMode } from 'src/services/openai';
 import { bypassFlow } from './bypass';
 
-export const conversationModeStartFlow = BotWhatsapp.addKeyword("modo conversacion")
+export const conversationModeStartFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["Podras tener una conversación con una AI especializada en tu relación, tu personalidad y la de tu pareja para darte los mejores consejos.",
         "Sientete libre de expresarte y preguntar todo lo que quieras. 🤗",
         "1️⃣ Empezar",

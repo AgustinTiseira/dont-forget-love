@@ -5,7 +5,7 @@ import { runConversationMode } from 'src/services/openai';
 import { mainMenuFlow } from '../mainMenu';
 
 export const bypassFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
-    .addAnswer([`*Escribe "SALIR" para terminar la conversación*`, "Response normal para continuar"], { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
+    .addAnswer([`*Escribe "SALIR" para terminar la conversación*`, "*Response normal para continuar*"], { capture: true }, async (ctx, { state, flowDynamic, gotoFlow }) => {
         try {
             if (ctx.body.toUpperCase() === "SALIR") {
                 await flowDynamic("Hasta luego! 👋")

@@ -7,6 +7,7 @@ declare module "@bot-whatsapp/bot" {
     pushName?: string;
     body: string;
     from: string;
+    idleFallBack: boolean
   };
 
   // Definiciones de tipos para el estado del bot
@@ -24,6 +25,7 @@ declare module "@bot-whatsapp/bot" {
     delay?: number;
     regex?: boolean;
     sensitive?: boolean;
+    idle?: number
   };
 
   type ActionPropertiesGeneric = Omit<
@@ -47,7 +49,6 @@ declare module "@bot-whatsapp/bot" {
     state: BotState;
     extensions: any;
     provider: any;
-    idle: (time: number) => Promise<void>;
   };
 
   // Función de devolución de llamada del bot
