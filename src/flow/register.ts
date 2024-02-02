@@ -18,7 +18,7 @@ export const getNameFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
                     { body: `Un gusto ${ctx.body}!` }, { body: "Pregunta: 1/3 ✅" }])
                 await state.update({ name: ctx.body })
                 await updateUserFunction(ctx.from, { name: ctx.body })
-                await gotoFlow(getAgeFlow)
+                return await gotoFlow(getAgeFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -34,13 +34,13 @@ export const getAgeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
                 if (ctx.idleFallBack) {
                     return await gotoFlow(finalyFlow)
                 }
-                if (!checkFormat(ctx.body)) {
-                    return fallBack("La fecha que ingresaste no es valida, por favor ingresala en el formato dd/mm/aaaa")
-                }
+                /*                 if (!checkFormat(ctx.body)) {
+                                    return fallBack("La fecha que ingresaste no es valida, por favor ingresala en el formato dd/mm/aaaa")
+                                } */
                 await flowDynamic([{ body: "Pregunta: 2/3 ✅✅" }])
                 await state.update({ birthDate: ctx.body })
                 await updateUserFunction(ctx.from, { birthDate: ctx.body })
-                await gotoFlow(getGenderFlow)
+                return await gotoFlow(getGenderFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -59,7 +59,7 @@ export const getGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
                 await flowDynamic([{ body: "Pregunta: 3/3 ✅✅✅" }, { body: "Solo una cosita mas, necesitamos una breve descripción tuya" }])
                 await state.update({ gender: ctx.body })
                 await updateUserFunction(ctx.from, { gender: ctx.body })
-                await gotoFlow(descriptionFlow)
+                return await gotoFlow(descriptionFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -78,13 +78,13 @@ export const descriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
                 if (ctx.idleFallBack) {
                     return await gotoFlow(finalyFlow)
                 }
-                if (ctx.body.length < 15) {
-                    return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
-                }
+                /*                 if (ctx.body.length < 15) {
+                                    return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
+                                } */
                 await state.update({ description: ctx.body })
                 await flowDynamic([{ body: "¡Listo! Ya estas registrado en Don't forget love" }, { body: "Ahora vamos a conocer mejor a tu pareja" }])
                 await updateUserFunction(ctx.from, { description: ctx.body })
-                await gotoFlow(getCoupleNameFlow)
+                return await gotoFlow(getCoupleNameFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return

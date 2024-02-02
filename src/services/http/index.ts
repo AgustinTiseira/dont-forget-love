@@ -44,7 +44,7 @@ const initServer = (botInstance: any) => {
     })
 
     //routes
-    app.use(userRoutes)
+    /* app.use(userRoutes) */
 }
 
 export { initServer }

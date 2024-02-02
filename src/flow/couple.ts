@@ -33,14 +33,14 @@ export const getCoupleAgeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION
             if (ctx.idleFallBack) {
                 return await gotoFlow(finalyFlow)
             }
-            if (!checkFormat(ctx.body)) {
-                return fallBack("La fecha que ingresaste no es valida, por favor ingresala en el formato dd/mm/aaaa")
-            }
+            /*             if (!checkFormat(ctx.body)) {
+                            return fallBack("La fecha que ingresaste no es valida, por favor ingresala en el formato dd/mm/aaaa")
+                        } */
             const coupleAge = changeBirthDateToAge(ctx.body)
             const user = await getUserByPhoneFunction(ctx.from)
             await flowDynamic([{ body: `Genial, entonces ${user.couple.coupleName} tiene ${coupleAge} años y tu ${changeBirthDateToAge(user.birthDate)} años` }, { body: "Pregunta: 2/5 ✅✅" }])
             await updateUserFunction(ctx.from, { couple: { ...user.couple, coupleBirthDate: ctx.body } })
-            await gotoFlow(getCoupleGenderFlow)
+            return await gotoFlow(getCoupleGenderFlow)
         }
         catch (err) {
             console.log(`[ERROR]:`, err)
@@ -59,7 +59,7 @@ export const getCoupleGenderFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACT
             await flowDynamic([{ body: `Perfecto, ya tenemos la información basica sobre tu pareja` }, { body: "Pregunta: 3/5 ✅✅✅" }])
             const couple = (await getUserByPhoneFunction(ctx.from)).couple
             await updateUserFunction(ctx.from, { couple: { ...couple, coupleGender: ctx.body } })
-            await gotoFlow(getCoupleDescriptionFlow)
+            return await gotoFlow(getCoupleDescriptionFlow)
         })
 
 // Obtengo la descripcion de la pareja
@@ -77,13 +77,13 @@ export const getCoupleDescriptionFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENT
             if (ctx.idleFallBack) {
                 return await gotoFlow(finalyFlow)
             }
-            if (ctx.body.length < 15) {
-                return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
-            }
+            /*             if (ctx.body.length < 15) {
+                            return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
+                        } */
             await flowDynamic([{ body: `Excelente, solo una pregunta mas...` }, { body: "Pregunta: 4/5 ✅✅✅✅" }])
             const couple = (await getUserByPhoneFunction(ctx.from)).couple
             await updateUserFunction(ctx.from, { couple: { ...couple, coupleDescription: ctx.body } })
-            await gotoFlow(reasonForFallingInLoveFlow)
+            return await gotoFlow(reasonForFallingInLoveFlow)
         })
 
 // Obtengo la razon por la que su pareja se enamoro del usuario
@@ -94,13 +94,13 @@ export const reasonForFallingInLoveFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVE
             if (ctx.idleFallBack) {
                 return await gotoFlow(finalyFlow)
             }
-            if (ctx.body.length < 15) {
-                return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
-            }
+            /*             if (ctx.body.length < 15) {
+                            return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
+                        } */
             await flowDynamic([{ body: `Gracias por la información` },
             { body: "ℹ️ Esta información nos permite crear un informe completo sobre sus personalidades" },
             { body: "Pregunta: 5/5 ✅✅✅✅✅" }])
             const couple = (await getUserByPhoneFunction(ctx.from)).couple
             await updateUserFunction(ctx.from, { couple: { ...couple, reasonForFallingInLove: ctx.body } })
-            await gotoFlow(howTheyMetFlow)
+            return await gotoFlow(howTheyMetFlow)
         })

@@ -9,6 +9,8 @@ export interface IUser {
     id: Types.ObjectId;
     phone: string;
     onboardingComplete: boolean
+    premium: boolean
+    GPTResponseAmount: number
     name?: string;
     birthDate?: string;
     gender?: string;
@@ -26,7 +28,9 @@ const IUserSchema = new Schema<IUser>({
     description: { type: String },
     couple: { type: Object },
     relationship: { type: Object },
-    dailyTips: { type: Object }
+    dailyTips: { type: Object },
+    GPTResponseAmount: { type: Number },
+    premium: { type: Boolean },
 });
 
 export default model<IUser>("User", IUserSchema);

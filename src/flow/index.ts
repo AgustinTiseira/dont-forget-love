@@ -10,6 +10,7 @@ import { settingsDailyTipsFlow } from './dailyTips/setting';
 import { conversationModeStartFlow, initConversationModeAIFlow } from './conversationMode/start';
 import { bypassFlow } from './conversationMode/bypass';
 import { finalyFlow } from './finalyFlow';
+import { premiumFlow } from './premium';
 
 
 export default BotWhatsapp.createFlow(
@@ -34,6 +35,7 @@ export default BotWhatsapp.createFlow(
         conversationModeStartFlow,
         initConversationModeAIFlow,
         bypassFlow,
-        finalyFlow
+        finalyFlow,
+        premiumFlow
     ]
 )

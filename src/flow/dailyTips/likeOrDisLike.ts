@@ -7,7 +7,7 @@ import { finalyFlow } from '../finalyFlow';
 
 export const likeOrDislikeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["1️⃣ Me gusta el consejo", "2️⃣ No me gusta el consejo"],
-        { capture: true, idle: time['10_MINUTES'] }, async (ctx, { flowDynamic, gotoFlow }) => {
+        { capture: true, idle: time['10_MINUTES'] }, async (ctx, { state, flowDynamic, gotoFlow }) => {
             try {
                 if (ctx.idleFallBack) {
                     return await gotoFlow(finalyFlow)
@@ -22,7 +22,8 @@ export const likeOrDislikeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTIO
                 }
                 await updateUserFunction(ctx.from, { dailyTips: { previuosTips: previuosTips } })
                 await flowDynamic([{ body: "Usaremos tu feedback para darte mejores consejos, gracias." }])
-                await gotoFlow(mainMenuFlow)
+                await state.update({ currentFlow: "mainMenuFlow" })
+                return await gotoFlow(mainMenuFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return

@@ -25,9 +25,10 @@ export const welcomeFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.WELCOME)
                 }
                 await updateUserFunction(ctx.from, { onboardingComplete: true })
             }
-            const currentFlow = await state.getMyState()?.currentFlow
-            console.log('currentFlow', currentFlow)
+            const currentFlow = state.getMyState()?.currentFlow
+            console.log(`[FLOW-WELCOME]:`, currentFlow)
             if (!currentFlow) {
+                await state.update({ currentFlow: "mainMenuFlow" })
                 return await gotoFlow(mainMenuFlow)
             }
         } catch (err) {

@@ -3,6 +3,8 @@ import { ChatCompletionMessageParam } from 'openai/resources';
 import { getUserByPhoneFunction } from 'src/services/functions/users';
 import { runConversationMode } from 'src/services/openai';
 import { bypassFlow } from './bypass';
+import { TEXT_MESSAGE_LIMIT } from 'src/@types/limit';
+import { premiumFlow } from '../premium';
 
 export const conversationModeStartFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
     .addAnswer(["Podras tener una conversación con una AI especializada en tu relación, tu personalidad y la de tu pareja para darte los mejores consejos.",
@@ -36,10 +38,18 @@ export const initConversationModeAIFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVE
                 role: 'user',
                 content: ctx.body
             })
-            await state.update({ history: newHistory })
             const responseAI = await runConversationMode(newHistory, user)
+            if (responseAI === TEXT_MESSAGE_LIMIT) {
+                await flowDynamic(responseAI)
+                return await gotoFlow(premiumFlow)
+            }
             await flowDynamic(responseAI)
-            return gotoFlow(bypassFlow)
+            newHistory.push({
+                role: 'assistant',
+                content: responseAI
+            })
+            await state.update({ history: newHistory })
+            return await gotoFlow(bypassFlow)
         } catch (err) {
             console.log(`[ERROR]:`, err)
             return

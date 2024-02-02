@@ -4,6 +4,8 @@ import { likeOrDislikeFlow } from './likeOrDisLike';
 import { settingsDailyTipsFlow } from './setting';
 import { getUserByPhoneFunction, updateUserFunction } from 'src/services/functions/users';
 import { mainMenuFlow } from '../mainMenu';
+import { TEXT_MESSAGE_LIMIT } from 'src/@types/limit';
+import { premiumFlow } from '../premium';
 
 
 export const dailyTipsFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
@@ -13,15 +15,20 @@ export const dailyTipsFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
                 if (ctx.body === "1" || ctx.body.toUpperCase() === "TIP DE HOY") {
                     await flowDynamic("Buscando tu tip de hoy... 💬")
                     const user = await getUserByPhoneFunction(ctx.from)
-                    const newDailyTip = await runDailyTips(user.dailyTips.previuosTips, user.name, user.couple.coupleName, user.relationship.goal, user.relationship.howTheyMet, user.couple.reasonForFallingInLove, user.relationship.typeOfRelationship, user.dailyTips.setting)
+                    const newDailyTip = await runDailyTips(user.GPTResponseAmount, user.phone, user.dailyTips.previuosTips, user.name, user.couple.coupleName, user.relationship.goal, user.relationship.howTheyMet, user.couple.reasonForFallingInLove, user.relationship.typeOfRelationship, user.dailyTips.setting)
                     await flowDynamic([{ body: newDailyTip }])
+                    if (newDailyTip === TEXT_MESSAGE_LIMIT) {
+                        return await gotoFlow(premiumFlow)
+                    }
                     await updateUserFunction(ctx.from, { dailyTips: { previuosTips: [...user.dailyTips.previuosTips, { tip: newDailyTip }] } })
-                    await gotoFlow(likeOrDislikeFlow)
+                    return await gotoFlow(likeOrDislikeFlow)
                 }
                 if (ctx.body === "2" || ctx.body.toUpperCase() === "CONFIGURACIÓN") {
-                    await gotoFlow(settingsDailyTipsFlow)
+                    return await gotoFlow(settingsDailyTipsFlow)
                 } if (ctx.body === "3" || ctx.body.toUpperCase() === "SALIR") {
-                    await gotoFlow(mainMenuFlow)
+                    await flowDynamic("Hasta luego! 👋")
+                    await state.update({ currentFlow: "mainMenuFlow" })
+                    return await gotoFlow(mainMenuFlow)
                 }
 
             } catch (err) {

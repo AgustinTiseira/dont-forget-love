@@ -17,12 +17,12 @@ export const howTheyMetFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
                 if (ctx.idleFallBack) {
                     return await gotoFlow(finalyFlow)
                 }
-                if (ctx.body.length < 15) {
-                    return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
-                }
+                /*                 if (ctx.body.length < 15) {
+                                    return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
+                                } */
                 await updateUserFunction(ctx.from, { relationship: { howTheyMet: ctx.body } })
                 await flowDynamic([{ body: "ℹ️ Usaremos estos recuerdos para poder darte sugerencias 100% personalizadas" }, { body: "Ultimas 2 preguntas" }])
-                await gotoFlow(typeOfRelationshipFlow)
+                return await gotoFlow(typeOfRelationshipFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -43,7 +43,7 @@ export const typeOfRelationshipFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.
                 const relationship = (await getUserByPhoneFunction(ctx.from)).relationship
                 await updateUserFunction(ctx.from, { relationship: { ...relationship, typeOfRelationship: ctx.body } })
                 await flowDynamic([{ body: "ℹ️ Adaptaremos nuestros consejos segun el punto de la relacion en la que se encuentren" }, { body: "Ultima pregunta 👏" }])
-                await gotoFlow(CouplesGoalFlow)
+                return await gotoFlow(CouplesGoalFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
                 return
@@ -59,18 +59,19 @@ export const CouplesGoalFlow = BotWhatsapp.addKeyword(BotWhatsapp.EVENTS.ACTION)
         "Conocerse mejor 🤝",
         "Llevarse mejor"
     ],
-        { capture: true, idle: time['30_MINUTES'] }, async (ctx, { flowDynamic, gotoFlow, fallBack }) => {
+        { capture: true, idle: time['30_MINUTES'] }, async (ctx, { state, flowDynamic, gotoFlow, fallBack }) => {
             try {
                 if (ctx.idleFallBack) {
                     return await gotoFlow(finalyFlow)
                 }
-                if (ctx.body.length < 15) {
-                    return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
-                }
+                /*                 if (ctx.body.length < 15) {
+                                    return fallBack("Por favor, cuentanos un poco mas para alimentar mejor el algoritmo")
+                                } */
                 const relationship = (await getUserByPhoneFunction(ctx.from)).relationship
                 await updateUserFunction(ctx.from, { relationship: { ...relationship, goal: ctx.body } })
                 await flowDynamic([{ body: "Danos unos segundos para analizar su situacion actual, sus personalizadades y el objetivo que buscas." }])
                 await updateUserFunction(ctx.from, { onboardingComplete: true })
+                await state.update({ currentFlow: "mainMenuFlow" })
                 return await gotoFlow(mainMenuFlow)
             } catch (err) {
                 console.log(`[ERROR]:`, err)
